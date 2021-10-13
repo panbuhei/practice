@@ -43,7 +43,7 @@ Successfully built faa3d17c6744
 Successfully tagged httpserver:v1.0
 ```
 
-# 2 查看生成的镜像 httpserver
+# 2. 查看生成的镜像 httpserver
 ```
 root@ubuntu20:~/module3/httpServer# docker images
 REPOSITORY   TAG            IMAGE ID       CREATED          SIZE
@@ -55,7 +55,43 @@ alpine       latest         14119a10abf4   6 weeks ago      5.6MB
 镜像 a06962873de4 是多段构建的第0个构建(base)，最后生成的 httpserver 镜像只有 11.9MB
 
 
-# 3. 本地运行 httpserver
+# 3. 将镜像推送至 Docker 官方镜像仓库
+## 3.1 创建一个镜像仓库
+注册连接：[https://hub.docker.com/](https://hub.docker.com/)，已注册账号，可[直接登陆](https://id.docker.com/login/?next=%2Fid%2Foauth%2Fauthorize%2F%3Fclient_id%3D43f17c5f-9ba4-4f13-853d-9d0074e349a7%26nonce%3DeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI0M2YxN2M1Zi05YmE0LTRmMTMtODUzZC05ZDAwNzRlMzQ5YTciLCJleHAiOiIyMDIxLTEwLTEzVDEwOjM2OjEzLjUzMTAwMDc3NFoiLCJpYXQiOiIyMDIxLTEwLTEzVDEwOjMxOjEzLjUzMTAwMTc3MVoiLCJyZnAiOiI1V2h1ZGtVd0huMFQwQ19hV2tJend3PT0iLCJ0YXJnZXRfbGlua191cmkiOiJodHRwczovL2h1Yi5kb2NrZXIuY29tIn0._ptan42erloKiofEFH7JwRuJAZfjd1Xgv70oYmaSpmo%26redirect_uri%3Dhttps%253A%252F%252Fhub.docker.com%252Fsso%252Fcallback%26response_type%3Dcode%26scope%3Dopenid%26state%3DeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI0M2YxN2M1Zi05YmE0LTRmMTMtODUzZC05ZDAwNzRlMzQ5YTciLCJleHAiOiIyMDIxLTEwLTEzVDEwOjM2OjEzLjUzMTAwMDc3NFoiLCJpYXQiOiIyMDIxLTEwLTEzVDEwOjMxOjEzLjUzMTAwMTc3MVoiLCJyZnAiOiI1V2h1ZGtVd0huMFQwQ19hV2tJend3PT0iLCJ0YXJnZXRfbGlua191cmkiOiJodHRwczovL2h1Yi5kb2NrZXIuY29tIn0._ptan42erloKiofEFH7JwRuJAZfjd1Xgv70oYmaSpmo)
+
+![image](https://user-images.githubusercontent.com/83450378/137117357-ac4bb1ab-9670-4e95-b0e4-cdaf2584b4f7.png)
+
+![image](https://user-images.githubusercontent.com/83450378/137117697-6ffb889d-1452-42f4-9c03-255a77e95f60.png)
+
+## 3.2 为 httpserver 镜像打标签
+```
+docker tag faa3d17c6744 xxxxxxxxxx035/cncamp101/httpserver:v1.0
+```
+
+## 3.3 登陆 Docker 官方镜像仓库
+```
+root@ubuntu20:~/module3/httpServer# docker login
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: xxxxxxxxxx035
+Password: 
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+```
+
+## 3.4 上传到仓库
+```
+root@ubuntu20:~/module3/httpServer# docker push xxxxxxxxxx035/cncamp101/httpserver:v1.0
+The push refers to repository [docker.io/wupanfeng035/cncamp101/httpserver]
+b633ed876956: Preparing 
+e2eb06d8af82: Preparing 
+denied: requested access to the resource is denied
+```
+
+
+# 4. 本地运行 httpserver
 ```
 root@ubuntu20:~/module3/httpServer# docker run -d httpserver:v1.0
 4784531a3644a5ce784fb2402454ec44ff148c631d9d0a1b7fade70735aa7ef4
@@ -64,15 +100,15 @@ CONTAINER ID   IMAGE             COMMAND         CREATED         STATUS         
 4784531a3644   httpserver:v1.0   "/httpserver"   3 seconds ago   Up 2 seconds   80/tcp    dazzling_easley
 ```
 
-# 4. 通过 nsenter 进入容器查看 IP 配置
-## 4.1 查看容器的 pid
+# 5. 通过 nsenter 进入容器查看 IP 配置
+## 5.1 查看容器的 pid
 ```
 root@ubuntu20:~/module3/httpServer# docker inspect 4784531a3644 | grep -i pid
             "Pid": 65484,
             "PidMode": "",
             "PidsLimit": null,
 ```
-## 4.2 通过 nsenter 查看容器的 IP 配置
+## 5.2 通过 nsenter 查看容器的 IP 配置
 ```
 root@ubuntu20:~/module3/httpServer# nsenter -t 65484 -n ip a 
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
@@ -85,7 +121,7 @@ root@ubuntu20:~/module3/httpServer# nsenter -t 65484 -n ip a
        valid_lft forever preferred_lft forever
 ```
 
-# 5. 访问容器内的程序
+# 6. 访问容器内的程序
 ```
 root@ubuntu20:~/module3/httpServer# curl 172.17.0.2/hello
 hello golang
