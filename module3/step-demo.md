@@ -1,4 +1,4 @@
-1. 构建 httpserver 镜像
+# 1. 构建 httpserver 镜像
 ```
 root@ubuntu20:~# cd module3/httpServer/
 
@@ -43,7 +43,19 @@ Successfully built faa3d17c6744
 Successfully tagged httpserver:v1.0
 ```
 
-2. 本地运行 httpserver
+# 2 查看生成的镜像 httpserver
+```
+root@ubuntu20:~/module3/httpServer# docker images
+REPOSITORY   TAG            IMAGE ID       CREATED          SIZE
+httpserver   v1.0           faa3d17c6744   33 minutes ago   11.9MB
+<none>       <none>         a06962873de4   33 minutes ago   308MB
+golang       1.16-alpine    1b35785aa3c4   5 days ago       302MB
+alpine       latest         14119a10abf4   6 weeks ago      5.6MB
+```
+镜像 a06962873de4 是多段构建的第0个构建(base)，最后生成的 httpserver 镜像只有 11.9MB
+
+
+# 3. 本地运行 httpserver
 ```
 root@ubuntu20:~/module3/httpServer# docker run -d httpserver:v1.0
 4784531a3644a5ce784fb2402454ec44ff148c631d9d0a1b7fade70735aa7ef4
@@ -52,12 +64,16 @@ CONTAINER ID   IMAGE             COMMAND         CREATED         STATUS         
 4784531a3644   httpserver:v1.0   "/httpserver"   3 seconds ago   Up 2 seconds   80/tcp    dazzling_easley
 ```
 
-3. 通过 nsenter 进入容器查看 IP 配置
+# 4. 通过 nsenter 进入容器查看 IP 配置
+## 4.1 查看容器的 pid
 ```
 root@ubuntu20:~/module3/httpServer# docker inspect 4784531a3644 | grep -i pid
             "Pid": 65484,
             "PidMode": "",
             "PidsLimit": null,
+```
+## 4.2 通过 nsenter 查看容器的 IP 配置
+```
 root@ubuntu20:~/module3/httpServer# nsenter -t 65484 -n ip a 
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -69,11 +85,13 @@ root@ubuntu20:~/module3/httpServer# nsenter -t 65484 -n ip a
        valid_lft forever preferred_lft forever
 ```
 
-4. 访问容器内的程序
+# 5. 访问容器内的程序
 ```
 root@ubuntu20:~/module3/httpServer# curl 172.17.0.2/hello
 hello golang
+```
 
+```
 root@ubuntu20:~/module3/httpServer# nsenter -t 65484 -n curl 127.0.0.1/healthz
 200
 ```
