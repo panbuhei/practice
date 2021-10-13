@@ -6,7 +6,7 @@
 4. 当访问 localhost/healthz 时，应返回 200
 
 ## 模块三作业：构建本地镜像
-### 演示步骤：step-demo.md(module3/step-demo.md ':include')
+### 演示步骤：[step-demo.md](https://github.com/panbuhei/practice/blob/master/module3/step-demo.md)
 1. 编写 Dockerfile 将练习模块二作业编写的 httpserver 容器化(请思考有哪些最佳实践可以引入到 Dockerfile 中来)
 2. 将镜像推送至 Docker 官方镜像仓库
 3. 通过 Docker 命令本地启动 httpserver
