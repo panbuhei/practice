@@ -9,6 +9,7 @@ import (
 
 func main() {
 	http.HandleFunc("/healthz", healthz)
+	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/header", modifyResHeader)
 
 	err := http.ListenAndServe(":80", nil)
@@ -50,4 +51,12 @@ func healthz(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusUnauthorized)
 	}
+}
+
+func hello(w http.ResponseWriter, r *http.Request) {
+	_, err := w.Write([]byte("hello golang"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.WriteHeader(http.StatusUnauthorized)
 }
