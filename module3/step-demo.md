@@ -68,6 +68,16 @@ alpine       latest         14119a10abf4   6 weeks ago      5.6MB
 docker tag faa3d17c6744 xxxxxxxxxx035/cncamp101/httpserver:v1.0
 ```
 
+docker tag 命令示例：
+```
+docker tag 0e5574283393 hub.docker.com/cncamp/httpserver:v1.0
+```
+- hub.docker.com：镜像仓库地址，如果不填，默认为 hub.docker.co
+- cncamp: repositry
+- httpserver：镜像名
+- v1.0：tag，常用来记录版本信息
+
+
 ## 3.3 登陆 Docker 官方镜像仓库
 ```
 root@ubuntu20:~/module3/httpServer# docker login
@@ -83,11 +93,11 @@ Login Succeeded
 
 ## 3.4 上传到仓库
 ```
-root@ubuntu20:~/module3/httpServer# docker push xxxxxxxxxx035/cncamp101/httpserver:v1.0
-The push refers to repository [docker.io/wupanfeng035/cncamp101/httpserver]
-b633ed876956: Preparing 
-e2eb06d8af82: Preparing 
-denied: requested access to the resource is denied
+root@ubuntu20:~/module3/httpServer# docker push wupanfeng035/httpserver:v1.0
+The push refers to repository [docker.io/wupanfeng035/httpserver]
+b633ed876956: Pushed 
+e2eb06d8af82: Pushed 
+v1.0: digest: sha256:bd8642df2d30b900b1ded9e68b27794c28f60346650b52614826a04149370d66 size: 739
 ```
 
 
