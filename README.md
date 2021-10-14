@@ -7,8 +7,8 @@
 
 ## 模块三作业：构建本地镜像
 ### 演示步骤：
-[step-demo.md](./module3/step-demo.md)
-[new-step-demo.md](./module3/new-step-demo.md)，学习了"学习委员-麟"的模板之后的改进
+- [step-demo.md](./module3/step-demo.md)
+- [new-step-demo.md](./module3/new-step-demo.md)，学习了 "学习委员-麟" 的模板之后的改进
 1. 编写 Dockerfile 将练习模块二作业编写的 httpserver 容器化(请思考有哪些最佳实践可以引入到 Dockerfile 中来)
 2. 将镜像推送至 Docker 官方镜像仓库
 3. 通过 Docker 命令本地启动 httpserver
