@@ -59,7 +59,7 @@ alpine       latest         14119a10abf4   6 weeks ago      5.6MB
 ## 3.1 创建一个镜像仓库
 注册连接：[https://hub.docker.com/](https://hub.docker.com/)，已注册账号，可[直接登陆](https://id.docker.com/login/?next=%2Fid%2Foauth%2Fauthorize%2F%3Fclient_id%3D43f17c5f-9ba4-4f13-853d-9d0074e349a7%26nonce%3DeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI0M2YxN2M1Zi05YmE0LTRmMTMtODUzZC05ZDAwNzRlMzQ5YTciLCJleHAiOiIyMDIxLTEwLTEzVDEwOjM2OjEzLjUzMTAwMDc3NFoiLCJpYXQiOiIyMDIxLTEwLTEzVDEwOjMxOjEzLjUzMTAwMTc3MVoiLCJyZnAiOiI1V2h1ZGtVd0huMFQwQ19hV2tJend3PT0iLCJ0YXJnZXRfbGlua191cmkiOiJodHRwczovL2h1Yi5kb2NrZXIuY29tIn0._ptan42erloKiofEFH7JwRuJAZfjd1Xgv70oYmaSpmo%26redirect_uri%3Dhttps%253A%252F%252Fhub.docker.com%252Fsso%252Fcallback%26response_type%3Dcode%26scope%3Dopenid%26state%3DeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI0M2YxN2M1Zi05YmE0LTRmMTMtODUzZC05ZDAwNzRlMzQ5YTciLCJleHAiOiIyMDIxLTEwLTEzVDEwOjM2OjEzLjUzMTAwMDc3NFoiLCJpYXQiOiIyMDIxLTEwLTEzVDEwOjMxOjEzLjUzMTAwMTc3MVoiLCJyZnAiOiI1V2h1ZGtVd0huMFQwQ19hV2tJend3PT0iLCJ0YXJnZXRfbGlua191cmkiOiJodHRwczovL2h1Yi5kb2NrZXIuY29tIn0._ptan42erloKiofEFH7JwRuJAZfjd1Xgv70oYmaSpmo)
 
-![image](https://user-images.githubusercontent.com/83450378/137117357-ac4bb1ab-9670-4e95-b0e4-cdaf2584b4f7.png)
+![image](https://user-images.githubusercontent.com/83450378/137235721-2496e823-14be-47c7-87bb-a63495f4089f.png)
 
 ![image](https://user-images.githubusercontent.com/83450378/137117697-6ffb889d-1452-42f4-9c03-255a77e95f60.png)
 
@@ -68,10 +68,7 @@ alpine       latest         14119a10abf4   6 weeks ago      5.6MB
 docker tag faa3d17c6744 xxxxxxxxxx035/cncamp101/httpserver:v1.0
 ```
 
-docker tag 命令示例：
-```
-docker tag 0e5574283393 hub.docker.com/cncamp/httpserver:v1.0
-```
+docker tag 信息描述，以 hub.docker.com/cncamp/httpserver:v1.0 为例：
 - hub.docker.com：镜像仓库地址，如果不填，默认为 hub.docker.co
 - cncamp: repositry
 - httpserver：镜像名
@@ -93,8 +90,8 @@ Login Succeeded
 
 ## 3.4 上传到仓库
 ```
-root@ubuntu20:~/module3/httpServer# docker push wupanfeng035/httpserver:v1.0
-The push refers to repository [docker.io/wupanfeng035/httpserver]
+root@ubuntu20:~/module3/httpServer# docker push xxxxxxxxxx035/httpserver:v1.0
+The push refers to repository [docker.io/xxxxxxxxxx035/httpserver]
 b633ed876956: Pushed 
 e2eb06d8af82: Pushed 
 v1.0: digest: sha256:bd8642df2d30b900b1ded9e68b27794c28f60346650b52614826a04149370d66 size: 739
