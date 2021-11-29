@@ -15,7 +15,7 @@
 - "学习委员-麟" 的模板：[dockerfile-template](./jpg/dockerfile-template.jpg)
 
 ## 模块八作业：将 httpserver 部署到 kubernetes 集群
-PS：由于 Go 能力有限，代码使用的是孟老师的 grace 分支
+**PS：**由于 Go 能力有限，代码使用的是孟老师的 grace 分支
 ### 第一部分
 1. 优雅启动
 2. 优雅终止
