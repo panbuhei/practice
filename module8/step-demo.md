@@ -138,3 +138,5 @@ ingress-nginx-controller             NodePort    10.109.238.20   <none>        8
 ingress-nginx-controller-admission   ClusterIP   10.108.47.16    <none>        443/TCP                      5h29m
 ```
 
+![httpserver](https://user-images.githubusercontent.com/83450378/143858775-17ed5711-03c2-40a1-866c-96904c51297c.png)
+
