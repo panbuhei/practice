@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: httpserver
+  name: httpserver
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: httpserver
+  template:
+    metadata:
+      # 声明上报 prometheus 的指标和端口
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: httpserver-metrics
+      labels:
+        app: httpserver
+    spec:
+      # 优雅终止(如果容器未在 60秒内退出，将在 60秒后进行强杀(SIGKILL))
+      terminationGracePeriodSeconds: 60
+      containers:
+      - image: wupanfeng035/httpserver:v1.0-metrics
+        imagePullPolicy: IfNotPresent
+        name: httpserver
+        # 定义端口信息
+        ports:
+          - containerPort: 80
+            name: httpserver-metrics
+            protocol: TCP
+        # 资源需求和 QoS 保证(QoS 为 Burstable)
+        resources: 
+          limits:
+            cpu: 1000m
+            memory: 2048Mi
+          requests: 
+            cpu: 500m
+            memory: 1024Mi
+        # 优雅启动(当 readinessProbe 探测成功后，才提供流量接入)
+        readinessProbe:
+          httpGet: 
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+          timeoutSeconds: 15
+        # 探活
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+          timeoutSeconds: 15
+      restartPolicy: Always

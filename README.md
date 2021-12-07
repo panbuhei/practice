@@ -32,3 +32,11 @@
 可以考虑的细节
 - 如何确保整个应用的高可用
 - 如何通过证书保证 httpServer 的通讯安全
+
+## 模块十作业
+**PS：由于 Go 能力有限，代码使用的是孟老师的 metrics 分支**
+1. 为 HTTPServer 添加 0-2 秒的随机延时
+2. 为 HTTPServer 项目添加延时 Metric
+3. 将 HTTPServer 部署至测试集群，并完成 Prometheus 配置
+4. 从 Promethus 界面中查询延时指标数据
+5. 创建一个 Grafana Dashboard 展现延时分配情况(可选)
