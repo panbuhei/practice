@@ -15,7 +15,7 @@ spec:
       # 声明上报 prometheus 的指标和端口
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: httpserver-metrics
+        prometheus.io/port: metrics
       labels:
         app: httpserver
     spec:
@@ -28,7 +28,7 @@ spec:
         # 定义端口信息
         ports:
           - containerPort: 80
-            name: httpserver-metrics
+            name: metrics
             protocol: TCP
         # 资源需求和 QoS 保证(QoS 为 Burstable)
         resources: 
