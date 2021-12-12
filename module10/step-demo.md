@@ -1,142 +1,97 @@
 # 构建镜像
 ```
-root@k8s001:~# cd module8/src/httpServer
+root@ubuntu20:~# cd module10/src/httpServer/
 
-root@k8s001:~/module8/src/httpServer# ls
-Dockerfile  go.mod  go.sum  main  Makefile
+root@ubuntu20:~/module10/src/httpServer# ls
+Dockerfile  go.mod  go.sum  main.go  Makefile  metrics
 
-root@k8s001:~/module8/src/httpServer# make build
+root@ubuntu20:~/module10/src/httpServer# make build
 echo "building httpserver container"
 building httpserver container
-docker build -t wupanfeng035/httpserver:v3.0 .
-Sending build context to Docker daemon  8.192kB
-Step 1/12 : FROM golang:1.16-alpine AS base
- ---> eee5af307da8
-Step 2/12 : ENV GO111MODULE=on     GOPROXY=https://goproxy.cn/,direct
- ---> Running in a68e0c8ea77d
-Removing intermediate container a68e0c8ea77d
- ---> 544aa1375d3a
-Step 3/12 : COPY main/main.go /go/src/project/
- ---> dbfd21ec926b
-Step 4/12 : COPY go.mod /go/src/project/
- ---> 87440388af13
-Step 5/12 : COPY go.sum /go/src/project/
- ---> 433e494fa7ef
-Step 6/12 : WORKDIR /go/src/project/
- ---> Running in 0fed78eee859
-Removing intermediate container 0fed78eee859
- ---> 16865a11edde
-Step 7/12 : RUN go mod download
- ---> Running in 17dae01b945e
-Removing intermediate container 17dae01b945e
- ---> 6b2836c340c2
-Step 8/12 : RUN GOOS=linux GOARCH=amd64 go build -o httpserver ./main.go
- ---> Running in 5c0d9f49552c
-Removing intermediate container 5c0d9f49552c
- ---> cdb30801094a
-Step 9/12 : FROM alpine
+docker build -t wupanfeng035/httpserver:v1.0-metrics .
+Sending build context to Docker daemon   25.6kB
+Step 1/13 : FROM golang:1.16-alpine AS base
+ ---> 065ac3b1a78f
+Step 2/13 : ENV GO111MODULE=on     GOPATH=/go/src/project/     GOPROXY=https://goproxy.cn/,direct
+ ---> Using cache
+ ---> 2cabe6ea2b33
+Step 3/13 : COPY main.go /go/src/project/github/panbuhei/practice/module10/src/httpServer/
+ ---> Using cache
+ ---> 9dbe377aab2f
+Step 4/13 : COPY metrics/ /go/src/project/github/panbuhei/practice/module10/src/httpServer/metrics
+ ---> Using cache
+ ---> d5fca53a22f9
+Step 5/13 : COPY go.mod /go/src/project/github/panbuhei/practice/module10/src/httpServer/
+ ---> Using cache
+ ---> fec54ee35628
+Step 6/13 : COPY go.sum /go/src/project/github/panbuhei/practice/module10/src/httpServer/
+ ---> Using cache
+ ---> 82c7208cc1e6
+Step 7/13 : WORKDIR /go/src/project/github/panbuhei/practice/module10/src/httpServer/
+ ---> Using cache
+ ---> 4c666eb3594f
+Step 8/13 : RUN go mod download
+ ---> Using cache
+ ---> 2f67716bd8dc
+Step 9/13 : RUN GOOS=linux GOARCH=amd64 go build -o httpserver .
+ ---> Using cache
+ ---> 7fe993841fd1
+Step 10/13 : FROM alpine
  ---> c059bfaa849c
-Step 10/12 : COPY --from=base /go/src/project/httpserver /httpserver
- ---> 33b919fd0973
-Step 11/12 : EXPOSE 80
- ---> Running in bfbe301be1c1
-Removing intermediate container bfbe301be1c1
- ---> 63af7491910b
-Step 12/12 : ENTRYPOINT ["/httpserver"]
- ---> Running in eda2730be072
-Removing intermediate container eda2730be072
- ---> 63ac8f26dc01
-Successfully built 63ac8f26dc01
-Successfully tagged wupanfeng035/httpserver:v3.0
+Step 11/13 : COPY --from=base /go/src/project/github/panbuhei/practice/module10/src/httpServer/httpserver /httpserver
+ ---> Using cache
+ ---> ae5fe03e2f30
+Step 12/13 : EXPOSE 80
+ ---> Using cache
+ ---> f0c5163e116a
+Step 13/13 : ENTRYPOINT ["/httpserver"]
+ ---> Using cache
+ ---> 83082ec1168c
+Successfully built 83082ec1168c
+Successfully tagged wupanfeng035/httpserver:v1.0-metrics
 ```
 
 # 上传镜像
 记得登陆 hub.docker.com
 ```
-root@k8s001:~/module8/src/httpServer# make push
+root@ubuntu20:~/module10/src/httpServer# make push
 echo "pushing wupanfeng035/httpserver"
 pushing wupanfeng035/httpserver
-docker push wupanfeng035/httpserver:v3.0
+docker push wupanfeng035/httpserver:v1.0-metrics
 The push refers to repository [docker.io/wupanfeng035/httpserver]
-b43e87e8772b: Pushed 
+a47a91c0c049: Pushed 
 8d3ac3489996: Layer already exists 
-v3.0: digest: sha256:10cdb39c1ba440000f77829c311ad9e619eeaffa4079fdb24202a8d5349b56cb size: 739
+v1.0-metrics: digest: sha256:e9b7134194270e204c51cf716f141ac8bde64ebd0d309fb2382c242d3336a1fd size: 739
 ```
 
 # 创建 httpserver 服务
-## 首先，通过 deployment 来创建 pod
+## 通过 deployment 来创建 pod
 ```
-root@k8s001:~/module8/src/httpServer# cd ../../config/
-
-root@k8s001:~/module8/config# ls
-deployment.yaml  ingress-nginx.yml  secret.yml  service.yml
-
-root@k8s001:~/module8/config# k apply -f deployment.yaml 
+root@node1:~/module10/config# kubectl apply -f deployment.yaml 
 deployment.apps/httpserver created
-```
-```
-root@k8s001:~/module8/config# k get pod
-NAME                         READY   STATUS    RESTARTS   AGE
-httpserver-fd6d69cf5-br464   1/1     Running   0          6m58s
-httpserver-fd6d69cf5-g8l79   1/1     Running   0          6m58s
-httpserver-fd6d69cf5-hq89t   1/1     Running   0          6m58s
+
+root@node1:~/module10/config# kubectl get pod
+NAME                          READY   STATUS    RESTARTS   AGE
+httpserver-75f86d7954-8p9vg   1/1     Running   0          33s
+httpserver-75f86d7954-ggfd7   1/1     Running   0          33s
+httpserver-75f86d7954-hv7fm   1/1     Running   0          33s
 ```
 
 ## 接着，构建 service
 ```
-root@k8s001:~/module8/config# k apply -f service.yml 
+root@node1:~/module10/config# kubectl apply -f service.yaml 
 service/httpserver created
 
-root@k8s001:~/module8/config# k get svc 
-NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
-httpserver   ClusterIP   10.96.253.94   <none>        80/TCP    9s
-kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP   20d
+root@node1:~/module10/config# kubectl get svc
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+httpserver   ClusterIP   10.233.39.254   <none>        80/TCP    4s
+kubernetes   ClusterIP   10.233.0.1      <none>        443/TCP   4d2h
 
 ### 验证一下 service 是否可以正常访问
-root@k8s001:~/module8/config# curl 10.96.253.94
-hello [stranger]
-===================Details of the http request header:============
-User-Agent=[curl/7.68.0]
-Accept=[*/*]
+root@node1:~/module10/config# curl 10.233.39.254/metrics
+......
+promhttp_metric_handler_requests_total{code="200"} 3
+promhttp_metric_handler_requests_total{code="500"} 0
+promhttp_metric_handler_requests_total{code="503"} 0
 ```
-
-### 然后，创建 TLS 证书
-```
-### 生成 crt 和 key
-# openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout httpserver.key -out httpserver.crt -subj "/CN=panbuhei.com/O=cncamp"
-
-### 通过 base64 进行转码后，填写至 secret 中对应的 tls.key 和 tls.crt 位置
-# cat httpserver.key | base64 -w 0
-# cat httpserver.crt | base64 -w 0
-
-### 创建 secret
-root@k8s001:~/module8/config# k create -f secret.yml 
-secret/httpserver-tls created
-
-root@k8s001:~/module8/config# k get secret
-NAME                  TYPE                                  DATA   AGE
-default-token-l5wsz   kubernetes.io/service-account-token   3      20d
-httpserver-tls        kubernetes.io/tls                     2      6s
-```
-
-### 最后，创建 ingress
-```
-root@k8s001:~/module8/config# k apply -f ingress-nginx.yml 
-ingress.networking.k8s.io/httpserver-gateway created
-
-root@k8s001:~/module8/config# k get ingress
-NAME                 CLASS    HOSTS          ADDRESS      PORTS     AGE
-httpserver-gateway   <none>   panbuhei.com   10.0.30.24   80, 443   34s
-```
-
-# 通过浏览器访问 httpserver 服务
-```
-### 查看 ingress 的 svc
-root@k8s001:~/module8/config# k get svc -n ingress-nginx
-NAME                                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
-ingress-nginx-controller             NodePort    10.109.238.20   <none>        80:30752/TCP,443:30020/TCP   5h29m
-ingress-nginx-controller-admission   ClusterIP   10.108.47.16    <none>        443/TCP                      5h29m
-```
-
-![httpserver](https://user-images.githubusercontent.com/83450378/143858775-17ed5711-03c2-40a1-866c-96904c51297c.png)
 
