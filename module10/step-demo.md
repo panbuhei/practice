@@ -95,3 +95,6 @@ promhttp_metric_handler_requests_total{code="500"} 0
 promhttp_metric_handler_requests_total{code="503"} 0
 ```
 
+# 从 Prometheus 中查看
+![image](https://user-images.githubusercontent.com/83450378/145709111-0b232e70-5b2d-43cd-922e-cdef0f598c27.png)
+
