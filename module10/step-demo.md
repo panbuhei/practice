@@ -98,3 +98,7 @@ promhttp_metric_handler_requests_total{code="503"} 0
 # 从 Prometheus 中查看
 ![image](https://user-images.githubusercontent.com/83450378/145709111-0b232e70-5b2d-43cd-922e-cdef0f598c27.png)
 
+
+# 通过 Grafana Dashboard 展现延时分配情况
+**PS：只是使用孟老师给的公式简单的进行了展示，对于其真正的含义还有待学习**
+![image](https://user-images.githubusercontent.com/83450378/145709438-25273201-5cae-4c14-be9f-2ec18d071a54.png)
