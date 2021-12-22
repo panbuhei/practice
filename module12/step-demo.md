@@ -16,7 +16,8 @@ root@node1:~# cd istio-1.12.0/
 root@node1:~/istio-1.12.0# cp bin/istioctl /usr/local/bin
 root@node1:~/istio-1.12.0# istioctl install --set profile=demo -y
 ```
-![install-istio](./install-istio.jpg)
+![install-istio](https://user-images.githubusercontent.com/83450378/147064347-2da1c911-e268-491d-ac4a-a7f33a27d225.jpg)
+
 
 
 ## 查看 Istio 是否安装成功
@@ -39,11 +40,11 @@ root@node1:~# kubectl create ns httpserver
 
 root@node1:~# kubectl label ns httpserver istio-injection=enabled
 ```
-PS：当你在一个命名空间中设置了 istio-injection=enabled 标签，且 Injection webhook 被启用后，任何新的 Pod 都有将在创建时自动添加 Sidecar。
+**PS：** 当你在一个命名空间中设置了 istio-injection=enabled 标签，且 Injection webhook 被启用后，任何新的 Pod 都有将在创建时自动添加 Sidecar。
 
 
 # 创建 httpserver 服务
-## 通过执行 deployment 创建 pod
+## 首先，通过执行 deployment 创建 pod
 ```
 root@node1:~# kubectl create -f deployment.yaml
 
@@ -63,7 +64,7 @@ NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
 httpserver   ClusterIP   10.233.34.138   <none>        80/TCP    10s
 ```
 
-## 验证是否可以正常提供服务
+## 然后，验证是否可以正常提供服务
 ```
 root@node1:~# curl 10.233.34.138/healthz
 ok
@@ -80,6 +81,7 @@ User-Agent=[curl/7.68.0]
 Accept=[*/*]
 ```
 
+
 # 通过 Istio 为 httpserver 配置 TLS
 ## 创建 TLS 证书
 ### 生成 crt 和 key
@@ -88,7 +90,7 @@ root@node1:~# openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj 
 ```
 
 ### 用 crt 和 key 创建一个 tls secret
-注意：要创建至 istio-system namespace
+**注意：** 要创建至 istio-system namespace
 ```
 root@node1:~# kubectl create -n istio-system secret tls httpserver-credential --key=panbuhei.com.key --cert=panbuhei.com.crt
 ```
@@ -117,5 +119,6 @@ istiod                 ClusterIP   10.233.7.1      <none>        15010/TCP,15012
 ```
 
 ## 浏览器访问
-![httpserver.panbuhei.com](./httpserver-tls.jpg)
+![httpserver-tls](https://user-images.githubusercontent.com/83450378/147064733-93e380c6-a5af-44cc-a3ab-4537af3a0d51.jpg)
+
 
