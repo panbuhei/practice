@@ -1,0 +1,35 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: httpserver
+spec:
+  gateways:
+    - httpserver
+  hosts:
+    - httpserver.panbuhei.com
+  http:
+    - match:
+        - port: 443
+      route:
+        - destination:
+            host: httpserver.httpserver.svc.cluster.local
+            port:
+              number: 80
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: httpserver
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - hosts:
+        - httpserver.panbuhei.com
+      port:
+        name: httpserver
+        number: 443
+        protocol: HTTPS
+      tls: 
+        mode: SIMPLE
+        credentialName: httpserver-credential
